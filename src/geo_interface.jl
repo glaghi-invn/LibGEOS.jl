@@ -1,3 +1,6 @@
+# TODO add back constructors for geometries using the GeoInterface
+
+#=
 GeoInterphase.coordinates(obj::Point) = isEmpty(obj.ptr) ? Float64[] : getCoordinates(getCoordSeq(obj.ptr), 1)
 GeoInterphase.coordinates(obj::LineString) = getCoordinates(getCoordSeq(obj.ptr))
 GeoInterphase.coordinates(obj::LinearRing) = getCoordinates(getCoordSeq(obj.ptr))
@@ -50,3 +53,13 @@ function GeoInterphase.geometries(obj::GeometryCollection)
     end
     collection
 end
+=#
+
+GeoInterphase.geomtype(g::Point) = GeoInterphase.Point()
+GeoInterphase.geomtype(g::LineString) = GeoInterphase.LineString()
+GeoInterphase.geomtype(g::Polygon) = GeoInterphase.Polygon()
+GeoInterphase.geomtype(g::MultiPoint) = GeoInterphase.MultiPoint()
+GeoInterphase.geomtype(g::MultiLineString) = GeoInterphase.MultiLineString()
+GeoInterphase.geomtype(g::MultiPolygon) = GeoInterphase.MultiPolygon()
+GeoInterphase.geomtype(g::GeometryCollection) = GeoInterphase.GeometryCollection()
+# TODO handle LinearRing and PreparedGeometry

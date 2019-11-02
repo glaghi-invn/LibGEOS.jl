@@ -1,4 +1,7 @@
-mutable struct Point <: GeoInterphase.AbstractPoint
+# abstract type Geometry <: AbstractVector{Float64} end
+abstract type Geometry end
+
+mutable struct Point <: Geometry
     ptr::GEOSGeom
 
     function Point(ptr::GEOSGeom)
@@ -9,10 +12,9 @@ mutable struct Point <: GeoInterphase.AbstractPoint
     Point(coords::Vector{Float64}) = Point(createPoint(coords))
     Point(x::Real, y::Real) = Point(createPoint(x,y))
     Point(x::Real, y::Real, z::Real) = Point(createPoint(x,y,z))
-    Point(obj::T) where {T<:GeoInterphase.AbstractPoint} = Point(GeoInterphase.coordinates(obj))
 end
 
-mutable struct MultiPoint <: GeoInterphase.AbstractMultiPoint
+mutable struct MultiPoint <: Geometry
     ptr::GEOSGeom
 
     function MultiPoint(ptr::GEOSGeom)
@@ -21,10 +23,9 @@ mutable struct MultiPoint <: GeoInterphase.AbstractMultiPoint
         multipoint
     end
     MultiPoint(multipoint::Vector{Vector{Float64}}) = MultiPoint(createCollection(GEOS_MULTIPOINT, GEOSGeom[createPoint(coords) for coords in multipoint]))
-    MultiPoint(obj::T) where {T<:GeoInterphase.AbstractMultiPoint} = MultiPoint(GeoInterphase.coordinates(obj))
 end
 
-mutable struct LineString <: GeoInterphase.AbstractLineString
+mutable struct LineString <: Geometry
     ptr::GEOSGeom
 
     function LineString(ptr::GEOSGeom)
@@ -33,10 +34,9 @@ mutable struct LineString <: GeoInterphase.AbstractLineString
         line
     end
     LineString(line::Vector{Vector{Float64}}) = LineString(createLineString(line))
-    LineString(obj::T) where {T<:GeoInterphase.AbstractLineString} = LineString(GeoInterphase.coordinates(obj))
 end
 
-mutable struct MultiLineString <: GeoInterphase.AbstractMultiLineString
+mutable struct MultiLineString <: Geometry
     ptr::GEOSGeom
 
     function MultiLineString(ptr::GEOSGeom)
@@ -45,10 +45,9 @@ mutable struct MultiLineString <: GeoInterphase.AbstractMultiLineString
         multiline
     end
     MultiLineString(multiline::Vector{Vector{Vector{Float64}}}) = MultiLineString(createCollection(GEOS_MULTILINESTRING, GEOSGeom[createLineString(coords) for coords in multiline]))
-    MultiLineString(obj::T) where {T<:GeoInterphase.AbstractMultiLineString} = MultiLineString(GeoInterphase.coordinates(obj))
 end
 
-mutable struct LinearRing <: GeoInterphase.AbstractLineString
+mutable struct LinearRing <: Geometry
     ptr::GEOSGeom
 
     function LinearRing(ptr::GEOSGeom)
@@ -57,10 +56,9 @@ mutable struct LinearRing <: GeoInterphase.AbstractLineString
         ring
     end
     LinearRing(ring::Vector{Vector{Float64}}) = LinearRing(createLinearRing(ring))
-    LinearRing(obj::T) where {T<:GeoInterphase.AbstractLineString} = LinearRing(GeoInterphase.coordinates(obj))
 end
 
-mutable struct Polygon <: GeoInterphase.AbstractPolygon
+mutable struct Polygon <: Geometry
     ptr::GEOSGeom
 
     function Polygon(ptr::GEOSGeom)
@@ -75,10 +73,9 @@ mutable struct Polygon <: GeoInterphase.AbstractPolygon
         finalizer(destroyGeom, polygon)
         polygon
     end
-    Polygon(obj::T) where {T<:GeoInterphase.AbstractPolygon} = Polygon(GeoInterphase.coordinates(obj))
 end
 
-mutable struct MultiPolygon <: GeoInterphase.AbstractMultiPolygon
+mutable struct MultiPolygon <: Geometry
     ptr::GEOSGeom
 
     function MultiPolygon(ptr::GEOSGeom)
@@ -91,10 +88,9 @@ mutable struct MultiPolygon <: GeoInterphase.AbstractMultiPolygon
                                       GEOSGeom[createPolygon(createLinearRing(coords[1]),
                                                              GEOSGeom[createLinearRing(c) for c in coords[2:end]])
                                                for coords in multipolygon]))
-    MultiPolygon(obj::T) where {T<:GeoInterphase.AbstractMultiPolygon} = MultiPolygon(GeoInterphase.coordinates(obj))
 end
 
-mutable struct GeometryCollection <: GeoInterphase.AbstractGeometryCollection
+mutable struct GeometryCollection <: Geometry
     ptr::GEOSGeom
 
     function GeometryCollection(ptr::GEOSGeom)
@@ -114,7 +110,7 @@ for geom in (:Point, :MultiPoint, :LineString, :MultiLineString, :LinearRing, :P
     end
 end
 
-mutable struct PreparedGeometry{G <: GeoInterphase.AbstractGeometry} <: GeoInterphase.AbstractGeometry
+mutable struct PreparedGeometry{G <: Geometry} <: Geometry
     ptr::Ptr{GEOSPreparedGeometry}
     ownedby::G
 end
