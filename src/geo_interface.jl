@@ -62,4 +62,5 @@ GeoInterphase.geomtype(g::MultiPoint) = GeoInterphase.MultiPoint()
 GeoInterphase.geomtype(g::MultiLineString) = GeoInterphase.MultiLineString()
 GeoInterphase.geomtype(g::MultiPolygon) = GeoInterphase.MultiPolygon()
 GeoInterphase.geomtype(g::GeometryCollection) = GeoInterphase.GeometryCollection()
-# TODO handle LinearRing and PreparedGeometry
+GeoInterphase.geomtype(g::LinearRing) = GeoInterphase.LineString()
+# TODO handle PreparedGeometry
