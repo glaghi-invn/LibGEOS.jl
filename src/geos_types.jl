@@ -1,4 +1,4 @@
-mutable struct Point <: GeoInterface.AbstractPoint
+mutable struct Point <: GeoInterphase.AbstractPoint
     ptr::GEOSGeom
 
     function Point(ptr::GEOSGeom)
@@ -9,10 +9,10 @@ mutable struct Point <: GeoInterface.AbstractPoint
     Point(coords::Vector{Float64}) = Point(createPoint(coords))
     Point(x::Real, y::Real) = Point(createPoint(x,y))
     Point(x::Real, y::Real, z::Real) = Point(createPoint(x,y,z))
-    Point(obj::T) where {T<:GeoInterface.AbstractPoint} = Point(GeoInterface.coordinates(obj))
+    Point(obj::T) where {T<:GeoInterphase.AbstractPoint} = Point(GeoInterphase.coordinates(obj))
 end
 
-mutable struct MultiPoint <: GeoInterface.AbstractMultiPoint
+mutable struct MultiPoint <: GeoInterphase.AbstractMultiPoint
     ptr::GEOSGeom
 
     function MultiPoint(ptr::GEOSGeom)
@@ -21,10 +21,10 @@ mutable struct MultiPoint <: GeoInterface.AbstractMultiPoint
         multipoint
     end
     MultiPoint(multipoint::Vector{Vector{Float64}}) = MultiPoint(createCollection(GEOS_MULTIPOINT, GEOSGeom[createPoint(coords) for coords in multipoint]))
-    MultiPoint(obj::T) where {T<:GeoInterface.AbstractMultiPoint} = MultiPoint(GeoInterface.coordinates(obj))
+    MultiPoint(obj::T) where {T<:GeoInterphase.AbstractMultiPoint} = MultiPoint(GeoInterphase.coordinates(obj))
 end
 
-mutable struct LineString <: GeoInterface.AbstractLineString
+mutable struct LineString <: GeoInterphase.AbstractLineString
     ptr::GEOSGeom
 
     function LineString(ptr::GEOSGeom)
@@ -33,10 +33,10 @@ mutable struct LineString <: GeoInterface.AbstractLineString
         line
     end
     LineString(line::Vector{Vector{Float64}}) = LineString(createLineString(line))
-    LineString(obj::T) where {T<:GeoInterface.AbstractLineString} = LineString(GeoInterface.coordinates(obj))
+    LineString(obj::T) where {T<:GeoInterphase.AbstractLineString} = LineString(GeoInterphase.coordinates(obj))
 end
 
-mutable struct MultiLineString <: GeoInterface.AbstractMultiLineString
+mutable struct MultiLineString <: GeoInterphase.AbstractMultiLineString
     ptr::GEOSGeom
 
     function MultiLineString(ptr::GEOSGeom)
@@ -45,10 +45,10 @@ mutable struct MultiLineString <: GeoInterface.AbstractMultiLineString
         multiline
     end
     MultiLineString(multiline::Vector{Vector{Vector{Float64}}}) = MultiLineString(createCollection(GEOS_MULTILINESTRING, GEOSGeom[createLineString(coords) for coords in multiline]))
-    MultiLineString(obj::T) where {T<:GeoInterface.AbstractMultiLineString} = MultiLineString(GeoInterface.coordinates(obj))
+    MultiLineString(obj::T) where {T<:GeoInterphase.AbstractMultiLineString} = MultiLineString(GeoInterphase.coordinates(obj))
 end
 
-mutable struct LinearRing <: GeoInterface.AbstractLineString
+mutable struct LinearRing <: GeoInterphase.AbstractLineString
     ptr::GEOSGeom
 
     function LinearRing(ptr::GEOSGeom)
@@ -57,10 +57,10 @@ mutable struct LinearRing <: GeoInterface.AbstractLineString
         ring
     end
     LinearRing(ring::Vector{Vector{Float64}}) = LinearRing(createLinearRing(ring))
-    LinearRing(obj::T) where {T<:GeoInterface.AbstractLineString} = LinearRing(GeoInterface.coordinates(obj))
+    LinearRing(obj::T) where {T<:GeoInterphase.AbstractLineString} = LinearRing(GeoInterphase.coordinates(obj))
 end
 
-mutable struct Polygon <: GeoInterface.AbstractPolygon
+mutable struct Polygon <: GeoInterphase.AbstractPolygon
     ptr::GEOSGeom
 
     function Polygon(ptr::GEOSGeom)
@@ -75,10 +75,10 @@ mutable struct Polygon <: GeoInterface.AbstractPolygon
         finalizer(destroyGeom, polygon)
         polygon
     end
-    Polygon(obj::T) where {T<:GeoInterface.AbstractPolygon} = Polygon(GeoInterface.coordinates(obj))
+    Polygon(obj::T) where {T<:GeoInterphase.AbstractPolygon} = Polygon(GeoInterphase.coordinates(obj))
 end
 
-mutable struct MultiPolygon <: GeoInterface.AbstractMultiPolygon
+mutable struct MultiPolygon <: GeoInterphase.AbstractMultiPolygon
     ptr::GEOSGeom
 
     function MultiPolygon(ptr::GEOSGeom)
@@ -91,10 +91,10 @@ mutable struct MultiPolygon <: GeoInterface.AbstractMultiPolygon
                                       GEOSGeom[createPolygon(createLinearRing(coords[1]),
                                                              GEOSGeom[createLinearRing(c) for c in coords[2:end]])
                                                for coords in multipolygon]))
-    MultiPolygon(obj::T) where {T<:GeoInterface.AbstractMultiPolygon} = MultiPolygon(GeoInterface.coordinates(obj))
+    MultiPolygon(obj::T) where {T<:GeoInterphase.AbstractMultiPolygon} = MultiPolygon(GeoInterphase.coordinates(obj))
 end
 
-mutable struct GeometryCollection <: GeoInterface.AbstractGeometryCollection
+mutable struct GeometryCollection <: GeoInterphase.AbstractGeometryCollection
     ptr::GEOSGeom
 
     function GeometryCollection(ptr::GEOSGeom)
@@ -114,7 +114,7 @@ for geom in (:Point, :MultiPoint, :LineString, :MultiLineString, :LinearRing, :P
     end
 end
 
-mutable struct PreparedGeometry{G <: GeoInterface.AbstractGeometry} <: GeoInterface.AbstractGeometry
+mutable struct PreparedGeometry{G <: GeoInterphase.AbstractGeometry} <: GeoInterphase.AbstractGeometry
     ptr::Ptr{GEOSPreparedGeometry}
     ownedby::G
 end

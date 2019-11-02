@@ -1,12 +1,8 @@
-# for geom in (:Point, :MultiPoint, :LineString, :MultiLineString, :LinearRing, :Polygon, :MultiPolygon)
-#     @eval Base.copy(obj::$geom) = ($geom)(GEOSGeom_clone(obj.ptr))
-# end
+GeoInterphase.coordinates(obj::Point) = isEmpty(obj.ptr) ? Float64[] : getCoordinates(getCoordSeq(obj.ptr), 1)
+GeoInterphase.coordinates(obj::LineString) = getCoordinates(getCoordSeq(obj.ptr))
+GeoInterphase.coordinates(obj::LinearRing) = getCoordinates(getCoordSeq(obj.ptr))
 
-GeoInterface.coordinates(obj::Point) = isEmpty(obj.ptr) ? Float64[] : getCoordinates(getCoordSeq(obj.ptr), 1)
-GeoInterface.coordinates(obj::LineString) = getCoordinates(getCoordSeq(obj.ptr))
-GeoInterface.coordinates(obj::LinearRing) = getCoordinates(getCoordSeq(obj.ptr))
-
-function GeoInterface.coordinates(polygon::Polygon)
+function GeoInterphase.coordinates(polygon::Polygon)
     exterior = getCoordinates(getCoordSeq(exteriorRing(polygon.ptr)))
     interiors = [getCoordinates(getCoordSeq(ring)) for ring in interiorRings(polygon.ptr)]
     if length(interiors) == 0
@@ -16,9 +12,9 @@ function GeoInterface.coordinates(polygon::Polygon)
     end
 end
 
-GeoInterface.coordinates(multipoint::MultiPoint) = Vector{Float64}[getCoordinates(getCoordSeq(geom),1) for geom in getGeometries(multipoint.ptr)]
-GeoInterface.coordinates(multiline::MultiLineString) = Vector{Vector{Float64}}[getCoordinates(getCoordSeq(geom)) for geom in getGeometries(multiline.ptr)]
-function GeoInterface.coordinates(multipolygon::MultiPolygon)
+GeoInterphase.coordinates(multipoint::MultiPoint) = Vector{Float64}[getCoordinates(getCoordSeq(geom),1) for geom in getGeometries(multipoint.ptr)]
+GeoInterphase.coordinates(multiline::MultiLineString) = Vector{Vector{Float64}}[getCoordinates(getCoordSeq(geom)) for geom in getGeometries(multiline.ptr)]
+function GeoInterphase.coordinates(multipolygon::MultiPolygon)
     geometries = getGeometries(multipolygon.ptr)
     coords = Array{Vector{Vector{Vector{Float64}}}}(undef, length(geometries))
     for (i,geom) in enumerate(getGeometries(multipolygon.ptr))
@@ -29,8 +25,8 @@ function GeoInterface.coordinates(multipolygon::MultiPolygon)
     coords
 end
 
-function GeoInterface.geometries(obj::GeometryCollection)
-    collection = GeoInterface.AbstractGeometry[]
+function GeoInterphase.geometries(obj::GeometryCollection)
+    collection = GeoInterphase.AbstractGeometry[]
     sizehint!(collection, numGeometries(obj.ptr))
     for geom in getGeometries(obj.ptr)
         if geomTypeId(geom) == GEOS_POINT

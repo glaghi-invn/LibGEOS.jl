@@ -1,4 +1,4 @@
-import GeoInterface
+import GeoInterphase
 using Test, LibGEOS
 
 @testset "LibGEOS" begin
