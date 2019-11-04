@@ -6,7 +6,7 @@
 
     # https://github.com/JuliaGeo/LibGEOS.jl/issues/24
     point = Point(2, 3)
-    @test GeoInterphase.geomtype(point) == GeoInterphase.Point()
+    @test GeoInterfaceRFC.geomtype(point) == GeoInterfaceRFC.Point()
 
     # https://github.com/JuliaGeo/LibGEOS.jl/issues/25
     a = LibGEOS.createCoordSeq([0.0, 2.0])
@@ -14,7 +14,7 @@
 
     # https://github.com/JuliaGeo/LibGEOS.jl/issues/12
     mp = LibGEOS.MultiPoint(Vector{Float64}[[0,0],[10,0],[10,10],[11,10]])
-    @test GeoInterphase.geomtype(mp) == GeoInterphase.MultiPoint()
+    @test GeoInterfaceRFC.geomtype(mp) == GeoInterfaceRFC.MultiPoint()
 
     # https://github.com/JuliaGeo/LibGEOS.jl/issues/20
     # LibGEOS doesn't support Extended WKT

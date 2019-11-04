@@ -1,7 +1,7 @@
 module LibGEOS
 
     using GEOS_jll
-    using GeoInterphase
+    using GeoInterfaceRFC
     using Libdl
     using CEnum
 
